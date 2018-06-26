@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { McqtestService } from '../mcqtest/mcqtest.service';
 
-declare var google: any;
+declare var FB: any;
 
 @Component({
   selector: 'app-facebook-share',

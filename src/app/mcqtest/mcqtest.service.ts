@@ -13,11 +13,9 @@ export class McqtestService {
 
   private testAnswers = new BehaviorSubject<TestAnswers[]>(null);
   private chartImageSrc = new BehaviorSubject<string>(null);
-  private userFBAccessToken = new BehaviorSubject<string>(null);
 
   getTestAnswers = this.testAnswers.asObservable();
   getChartImageSrc = this.chartImageSrc.asObservable();
-  getUserFBAccessToken = this.userFBAccessToken.asObservable();
 
   setTestAnswers(categories: TestAnswers[]): void {
     this.testAnswers.next(categories);
@@ -25,10 +23,6 @@ export class McqtestService {
 
   setChartImageSrc(src: string): void {
     this.chartImageSrc.next(src);
-  }
-
-  setUserFBAccessToken(token: string): void {
-    this.userFBAccessToken.next(token);
   }
 
   loadQuestions(): Observable<any> {
