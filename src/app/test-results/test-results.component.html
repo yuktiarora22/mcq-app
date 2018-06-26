@@ -1,0 +1,21 @@
+<ng-progress [color]="'#f05f40'" [spinner]="false"></ng-progress>
+
+<header class="masthead text-center d-flex">
+  <div class="container my-auto" *ngIf="!chartId">
+    <strong>Calculating section wise score...</strong>
+  </div>
+  <div class="container my-auto" *ngIf="chartId">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <p>Below is a bar chart representation of your score in each subject.</p>
+      </div>
+      <div class="col-lg-8 mx-auto">
+        <app-bar-chart [progressBar]="progressBar" [data]="chartData" [config]="config" [elementId]="chartId"></app-bar-chart>
+      </div>
+      <div class="col-lg-8 mx-auto">
+        <p class="mb-5">Share your test score on Facebook</p>
+        <app-facebook-share></app-facebook-share>
+      </div>
+    </div>
+  </div>
+</header>
