@@ -1,19 +1,17 @@
 <ng-progress [color]="'#f05f40'" [spinner]="false"></ng-progress>
 
-<header class="masthead text-center d-flex quiz-img">
-  <div class="container my-auto">
+<div class="quiz-img text-center" [ngStyle]="{height: calHeight}" (window:resize)="secHeight()">
+  <div class="banner-data">
     <div class="row">
-      <div class="col-lg-10 mx-auto">
+      <div class="col-lg-8 mx-auto">
         <h1 class="text-uppercase">
           <strong>Hello dear Students!!</strong>
         </h1>
         <hr>
-      </div>
-      <div class="col-lg-8 mx-auto">
         <p class="mb-5">This test is designed to help you with your upcoming entrance examinations. Hope you will benefit from the questions
           we have compiled for you.</p>
         <a class="btn btn-primary btn-xl" (click)="onLoginClick()">Login with Facebook</a>
       </div>
     </div>
   </div>
-</header>
+</div>

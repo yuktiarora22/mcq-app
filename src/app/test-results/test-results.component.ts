@@ -22,6 +22,9 @@ export class TestResultsComponent implements OnInit, AfterViewInit {
   chartData: any[];
   chartId: string;
   config: BarChartConfig;
+  calHeight: string;
+  showBarChartDiv = false;
+  scoreCalculated = false;
   @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
 
   ngAfterViewInit() {
@@ -29,6 +32,7 @@ export class TestResultsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.secHeight();
     combineLatest(
       this.mcqtestService.getTestAnswers,
       this.mcqtestService.loadAnswers()
@@ -37,6 +41,10 @@ export class TestResultsComponent implements OnInit, AfterViewInit {
       const answersList: TestAnswers[] = res2;
       this.calculateScore(studentAnswers, answersList);
     });
+  }
+
+  secHeight(): void {
+    this.calHeight = window.innerHeight + 'px';
   }
 
   calculateScore(studentAnswers: TestAnswers[], answersList: TestAnswers[]) {
@@ -56,10 +64,12 @@ export class TestResultsComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    this.showBarChart();
+    this.scoreCalculated = true;
+    this.progressBar.complete();
   }
 
   showBarChart(): void {
+    this.progressBar.start();
     this.chartData = [
       ['Subject', 'Score', { role: 'style' }],
       ['Magnetism', this.magnetismScore, 'blue'],
@@ -78,5 +88,6 @@ export class TestResultsComponent implements OnInit, AfterViewInit {
       }
     );
     this.chartId = 'scoreChart';
+    this.showBarChartDiv = true;
   }
 }
