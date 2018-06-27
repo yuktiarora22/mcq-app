@@ -29,7 +29,9 @@ export class BarChartService {
         maxValue: config.vAxis.maxValue
       },
       hAxis: { title: config.hAxis.title },
-      seriesType: 'bars'
+      seriesType: 'bars',
+      height: 250,
+      width: 350
     };
 
     this.googleChartsBaseService.buildChart(

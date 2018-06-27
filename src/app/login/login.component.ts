@@ -16,8 +16,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
+  calHeight: string;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.secHeight();
+  }
 
   onLoginClick() {
     this.progressBar.start();
@@ -31,5 +34,9 @@ export class LoginComponent implements OnInit {
 
   navigateToTestPage(): void {
     this.zone.run(() => this.router.navigateByUrl('/test'));
+  }
+
+  secHeight(): void {
+    this.calHeight = window.innerHeight + 'px';
   }
 }

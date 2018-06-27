@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { McqtestService } from './mcqtest.service';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TestAnswers, TestQuestions } from './mcqtest.model';
+import { NgProgressComponent } from '@ngx-progressbar/core';
 
 @Component({
   selector: 'app-mcqtest',
   templateUrl: './mcqtest.component.html',
   styleUrls: ['./mcqtest.component.css']
 })
-export class McqtestComponent implements OnInit {
+export class McqtestComponent implements OnInit, AfterViewInit {
   constructor(private mcqtestService: McqtestService, private router: Router) {}
 
-  questions: TestQuestions[];
+  questions: TestQuestions[] = [];
   countDown;
   counter = 5;
   startTest = false;
@@ -20,14 +21,26 @@ export class McqtestComponent implements OnInit {
   showElecQs = false;
   showPhyQs = false;
   questionFilter = '1';
+  calHeight: string;
+  @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
+
+  ngAfterViewInit() {
+    this.progressBar.start();
+  }
 
   ngOnInit(): void {
+    this.secHeight();
     this.mcqtestService.loadQuestions().subscribe(res => {
       this.questions = res;
+      this.progressBar.complete();
       this.countDown = this.mcqtestService
         .getCounter(this.counter)
         .pipe(finalize(() => this.submitTest()));
     });
+  }
+
+  secHeight(): void {
+    this.calHeight = window.innerHeight + 'px';
   }
 
   showTopicWiseQuestions(topic: string): void {

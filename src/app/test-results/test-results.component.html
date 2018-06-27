@@ -1,21 +1,30 @@
 <ng-progress [color]="'#f05f40'" [spinner]="false"></ng-progress>
 
-<header class="masthead text-center d-flex">
-  <div class="container my-auto" *ngIf="!chartId">
-    <strong>Calculating section wise score...</strong>
-  </div>
-  <div class="container my-auto" *ngIf="chartId">
+<div class="quiz-img text-center" [ngStyle]="{height: calHeight}" (window:resize)="secHeight()">
+  <div class="banner-data">
     <div class="row">
-      <div class="col-lg-8 mx-auto">
-        <p>Below is a bar chart representation of your score in each subject.</p>
+      <div class="col-lg-8 mx-auto" *ngIf="!scoreCalculated">
+        <h1>
+          <strong>Calculating section wise score...</strong>
+        </h1>
       </div>
-      <div class="col-lg-8 mx-auto">
+
+      <div class="col-lg-8 mx-auto" *ngIf="scoreCalculated && !showBarChartDiv">
+        <h3>Your score is as follows:</h3>
+        <div class="mb-3">
+          <p>Magnetism: {{magnetismScore}}</p>
+          <p>Electricity: {{electricityScore}}</p>
+          <p>Physics: {{physicsScore}}</p>
+        </div>
+        <a class="btn btn-primary btn-xl" (click)="showBarChart()">Generate Bar Chart</a>
+      </div>
+
+      <div class="col-lg-8 mx-auto my-auto" *ngIf="showBarChartDiv && chartId">
+        <h3>Below is a bar chart representation of your score in each subject.</h3>
         <app-bar-chart [progressBar]="progressBar" [data]="chartData" [config]="config" [elementId]="chartId"></app-bar-chart>
-      </div>
-      <div class="col-lg-8 mx-auto">
-        <p class="mb-5">Share your test score on Facebook</p>
+        <p class="mb-3">Share your test score on Facebook</p>
         <app-facebook-share></app-facebook-share>
       </div>
     </div>
   </div>
-</header>
+</div>

@@ -1,98 +1,90 @@
-<header class="masthead text-center d-flex" [ngClass]="{'quiz-img': !startTest}">
-  <div class="container my-auto" *ngIf="!startTest">
+<ng-progress [color]="'#f05f40'" [spinner]="false"></ng-progress>
+
+<div class="text-center" [ngClass]="{'quiz-img': !startTest}" [ngStyle]="{height: calHeight}" (window:resize)="secHeight()">
+  <div class="banner-data" *ngIf="!startTest">
     <div class="row">
-      <div class="col-lg-10 mx-auto">
+      <div class="col-lg-8 mx-auto">
         <h1 class="text-uppercase">
           <strong>Test Rules</strong>
         </h1>
         <hr>
-      </div>
-      <div class="col-lg-8 mx-auto">
         <p>There are 3 sections in the test: Magnetism, Electricity and Physics. Each section has 10 questions each.</p>
-        <p>The test has a 5 minute time limit, after which it will auto submit.</p>
+        <p class="mb-5">The test has a 5 minute time limit, after which it will auto submit.</p>
         <a class="btn btn-primary btn-xl" (click)="startTest = true;">Start Test</a>
       </div>
     </div>
   </div>
-  <div class="container" *ngIf="startTest">
-    <section id="testTimerDiv" class="p-0">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 text-center">
-            <h2 class="section-heading">Test timer: {{countDown | async | formatTime}}</h2>
+
+  <div *ngIf="startTest">
+    <div *ngIf="questions.length; else loadingQuestionsDiv">
+      <nav class="fixed-top bg-primary">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8">
+              <ul class="nav">
+                <li class="nav-item">
+                  <span class="nav-link" [ngClass]="{'active': showMagQs}" (click)="showTopicWiseQuestions('1');">Magnetism</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link" [ngClass]="{'active': showElecQs}" (click)="showTopicWiseQuestions('2');">Electricity</span>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link" [ngClass]="{'active': showPhyQs}" (click)="showTopicWiseQuestions('3');">Physics</span>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-4">
+              <h4 class="text-center timer">Test timer: {{countDown | async | formatTime}}</h4>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    <section class="p-0" id="subjectHeaderDiv">
-      <div class="container-fluid p-0">
-        <div class="row no-gutters popup-gallery">
-          <div class="col-lg-4 col-sm-6">
-            <a class="portfolio-box" [ngClass]="{'active': showMagQs}" (click)="showTopicWiseQuestions('1');">
-              <img class="img-fluid img-height" src="assets/images/mag.jpg" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Magnetism
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a class="portfolio-box" [ngClass]="{'active': showElecQs}" (click)="showTopicWiseQuestions('2');">
-              <img class="img-fluid img-height" src="assets/images/elec.jpg" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Electricity
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a class="portfolio-box" [ngClass]="{'active': showPhyQs}" (click)="showTopicWiseQuestions('3');">
-              <img class="img-fluid img-height" src="assets/images/phy.jpg" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Physics
-                  </div>
-                </div>
-              </div>
-            </a>
+      </nav>
+
+      <div class="container question-data">
+        <div class="pt-3">
+          <strong>{{questionFilter === '1' ? 'Magnetism' : (questionFilter === '2' ? 'Electricity' : 'Physics')}} Questions</strong>
+        </div>
+        <div id="questionsDiv" class="questions">
+          <div class="mb-3" *ngFor="let q of questions | filterQuestions: questionFilter">
+            <div>
+              ({{q.number}}) {{q.question}}
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="a_{{q.number}}" [(ngModel)]="q.selectedAnswer"
+                [value]="q.a">
+              <label class="form-check-label" for="a_{{q.number}}">{{q.a}}</label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="b_{{q.number}}" [(ngModel)]="q.selectedAnswer"
+                [value]="q.b">
+              <label class="form-check-label" for="b_{{q.number}}">{{q.b}}</label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="c_{{q.number}}" [(ngModel)]="q.selectedAnswer"
+                [value]="q.c">
+              <label class="form-check-label" for="c_{{q.number}}">{{q.c}}</label>
+            </div>
+            <div class="form-check-inline">
+              <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="d_{{q.number}}" [(ngModel)]="q.selectedAnswer"
+                [value]="q.d">
+              <label class="form-check-label" for="d_{{q.number}}">{{q.d}}</label>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    <div id="questionsDiv" class="questions">
-      <div class="mb-3" *ngFor="let q of questions | filterQuestions: questionFilter">
-        <div>
-          ({{q.number}}) {{q.question}}
-        </div>
-        <div class="form-check-inline">
-          <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="a_{{q.number}}" [(ngModel)]="q.selectedAnswer"
-            [value]="q.a">
-          <label class="form-check-label" for="a_{{q.number}}">{{q.a}}</label>
-        </div>
-        <div class="form-check-inline">
-          <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="b_{{q.number}}" [(ngModel)]="q.selectedAnswer"
-            [value]="q.b">
-          <label class="form-check-label" for="b_{{q.number}}">{{q.b}}</label>
-        </div>
-        <div class="form-check-inline">
-          <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="c_{{q.number}}" [(ngModel)]="q.selectedAnswer"
-            [value]="q.c">
-          <label class="form-check-label" for="c_{{q.number}}">{{q.c}}</label>
-        </div>
-        <div class="form-check-inline">
-          <input type="radio" class="form-check-input with-gap" name="q_{{q.number}}" id="d_{{q.number}}" [(ngModel)]="q.selectedAnswer"
-            [value]="q.d">
-          <label class="form-check-label" for="d_{{q.number}}">{{q.d}}</label>
-        </div>
+
+        <a class="btn btn-primary btn-xl submit" (click)="submitTest()">Submit Test</a>
       </div>
     </div>
-    <a class="btn btn-primary btn-xl submit" (click)="submitTest()">Submit Test</a>
+    <ng-template #loadingQuestionsDiv>
+      <div class="banner-data">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <h1>
+              <strong>Loading Questions...</strong>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
-</header>
+</div>
